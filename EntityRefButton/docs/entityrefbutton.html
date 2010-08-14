@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>EntityRefButtonプラグイン</title>
+<link href="mtdocs.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>EntityRefButtonプラグイン</h1>
+
+<h2>はじめに</h2>
+
+<p>
+EntityRefButtonプラグインは、特殊文字を実体参照に変換するボタンをエントリ編集画面およびクイック投稿画面に追加します。
+</p>
+<h4>MovableType v3.3xでの変換ボタン</h4>
+<img src="convert-button.jpg">
+
+<h4>MovableType v4.0での変換ボタン</h4>
+<img src="convert-button-v4.jpg">
+
+<h2>動作条件</h2>
+<p>
+本プラグインはMovableType 3.3以上またはMovableType Enterprise 1.52以上で動作します。
+</p>
+
+<h2>インストール</h2>
+<p>
+本パッケージに含まれる「<strong>plugins</strong>」ディレクトリ内の「EntityRefButton」ディレクトリを、Movable Typeインストールディレクトリの「<strong>plugins</strong>」ディレクトリの下にコピーしてください。<br>
+  次に本パッケージに含まれる「<strong>mt-static/plugins</strong>」ディレクトリ内の「EntityRefbutton」ディレクトリを、Movable Typeインストール時に「<strong>StaticWebPath</strong>」として指定したディレクトリ（デフォルトでは「mt-static」というディレクトリ名になっていると思います）の下の「<strong>plugins</strong>」ディレクトリにコピーしてください。<br>
+  結果、以下のような構成になります。
+</p>
+<pre>  
+    mt (Movable Typeインストールディレクトリ)
+    `-- plugins
+        `-- <strong>EntityRefButton</strong>
+            |-- <strong>entityrefbutton.pl</strong>
+            `-- <strong>lib</strong>
+                `-- <strong>EntityRefButton</strong>
+                    |-- <strong>L10N</strong>
+                    |   |-- <strong>en_us.pm</strong>
+                    |   `-- <strong>ja.pm</strong>
+                    `-- <strong>L10N.pm</strong>
+
+    mt-static (※StaticWebPathにて指定されたディレクトリ)
+    `-- plugins
+        `-- <strong>EntityRefButton</strong>
+            `-- <strong>images</strong>
+                |-- <strong>amp-hover.gif</strong>
+                |-- <strong>amp.gif</strong>
+                |-- <strong>formatting-icons</strong>
+                |   `-- <strong>ref.gif</strong>
+                `-- <strong>html-ref.gif</strong>
+
+</pre>
+<p>
+  作業後、Movable Typeのシステム・メニューのプラグイン管理画面を表示し、プラグインの一覧に「EntityRefButton」が表示されていることを確認してください。これで設置完了です。
+</p>
+
+<h2>使い方</h2>
+<p>
+実体参照に変換したい文字列を選択し、「&（アンパサンド）」が描かれている右端のボタンを押すだけです。
+</p>
+<img src="before.jpg">
+<img src="after.jpg">
+
+<p><span style="color: #f00;">注意</span>：MovableType v4.0では、フォーマットが「リッチテキスト」の場合、<span style="text-decoration: underline; font-weight: bold;">変換ボタンは表示されません。</span>それ以外のモードでのみ表示されます。</p>
+
+<h2>設定</h2>
+<p>
+本プラグインをインストールした状態では、スペースを改行禁止スペース(&amp;nbsp;)に変換します。この動作を禁止したい場合は、
+</p>
+<ol>
+  <li>
+    <strong>各ブログごとのプラグイン設定画面</strong>（注意：システムメニューのプラグイン設定画面ではありません）で EntityRefButtonの設定を表示し、
+    <img src="option1.jpg">
+  </li>
+  <li>
+    「スペースを改行禁止スペース(&amp;nbsp;)に変換する」オプションのチェックマークを外して、
+    <img src="option2.jpg">
+  </li>
+  <li>
+    変更を保存してください。
+  </li>
+</ol>
+
+<h2>更新履歴</h2>
+<ul>
+  <li>[2008-08-28: v0.2.2]</li>
+  <ul>
+    <li>MovableType V4.2に対応しました。</li>
+  </ul>
+  <li>[2008-01-30: v0.2.1]</li>
+  <ul>
+    <li>MovableType V4.1に対応しました。</li>
+  </ul>
+  <li>[2007-08-14: v0.2.0]</li>
+  <ul>
+    <li>MovableType V4.0に対応しました。</li>
+  </ul>
+  <li>[2007-04-26: v0.1.0]</li>
+  <ul>
+    <li>MovableType Enterpriseに対応しました。</li>
+  </ul>
+  <li>[2006-12-20: v0.0.5]</li>
+  <ul>
+    <li>apacheのerror_logに"Using a hash as a reference is deprecated"が出力される問題を修正した。</li>
+  </ul>
+  <li>[2006-12-11: v0.0.4]</li>
+  <ul>
+    <li>スペースを改行禁止スペース(&amp;nbsp;)に変換する／しないをオプションで選択できるようにした。</li>
+    <li>プラグイン作成者のリンク先を修正した。</li>
+  </ul>
+  <li>[2006-12-08: v0.0.3]</li>
+  <ul>
+    <li>クイック投稿画面に対応した。</li>
+  </ul>
+  <li>[2006-12-07: v0.0.2]</li>
+  <ul>
+    <li>最初のリリース</li>
+  </ul>
+</ul>
+
+<h2>このプラグインの利用、及び著作権や保証について</h2>
+<p>
+MovableType のユーザーは目的を問わず、このプラグインを無償で自由に利用することができます。このプラグインの著作権はM-Logic, Inc.が所有しています。<br>
+  このプラグインは無保証です。作者はこのプラグインの利用における一切の動作保証とサポートを行いません。<br>
+</p>
+
+<h2>連絡先</h2>
+<p>作者：<a href="http://m-logic.co.jp/">M-Logic, Inc.</a></p>
+
+</body>
+</html>
