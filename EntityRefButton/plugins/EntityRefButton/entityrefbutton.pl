@@ -36,12 +36,16 @@ elsif(is_mt40()) {
     MT->add_callback('MT::App::CMS::template_source.edit_entry', 9, $plugin, sub { transform_mt4(@_) });
     MT->add_callback('MT::App::CMS::template_param.edit_entry', 9, $plugin, sub { mod_params_mt4(@_) });
 }
-elsif(is_mt41() || is_mt42()) {
-    # MT4.1
+elsif(is_mt41() || is_mt42() || is_mt43()) {
+    # MT4.1 - MT4.3
     MT->add_callback('MT::App::CMS::template_source.archetype_editor', 9, $plugin, sub { transform_mt4(@_) });
     MT->add_callback('MT::App::CMS::template_param.edit_entry', 9, $plugin, sub { mod_params_mt4(@_) });
 }
-# NOTE: Lookbehind longer than 255 not implemented in regex;
+elsif(is_mt5()) {
+    # MT5.0
+    MT->add_callback('MT::App::CMS::template_source.archetype_editor', 9, $plugin, sub { transform_mt5(@_) });
+    MT->add_callback('MT::App::CMS::template_param.edit_entry', 9, $plugin, sub { mod_params_mt4(@_) });
+}# NOTE: Lookbehind longer than 255 not implemented in regex;
 
 my %TEMPLATES = (
 	       edit_entry => [
@@ -190,6 +194,14 @@ sub is_mt42 {
     return (substr(MT->version_number, 0, 3) eq '4.2');
 }
 
+sub is_mt43 {
+    return (substr(MT->version_number, 0, 3) eq '4.3');
+}
+
+sub is_mt5 {
+    return (substr(MT->version_number, 0, 3) eq '5.0');
+}
+
 sub log {
     my $plugin = shift;
     my ($msg) = @_;
@@ -330,6 +342,61 @@ sub mod_params_mt4 {
   $param->{entity_ref_button_label} = $plugin->translate('Convert to character entity reference');
   $param->{entity_ref_convert_space} = $plugin->entity_ref_convert_space($app->blog->id);
   $param->{entity_ref_image_dir} = $app->static_path . 'plugins/EntityRefButton/images/';
+  1;
+}
+
+sub transform_mt5 {
+  my ($eh, $app, $tmpl) = @_;
+  
+  my $pattern = quotemeta(<<'HTML');
+                                <a href="javascript: void 0;" title="<__trans phrase="HTML Mode" escape="html">" mt:command="set-mode-textarea" class="command-toggle-html toolbar button"><b>HTML Mode</b><s></s></a>
+HTML
+  my $replacement = $plugin->translate_templatized(<<'HTML');
+<style type="text/css">
+.editor-plaintext .editor-toolbar a.button.command-convert-entity-ref {
+    background-image: url(<$mt:var name="entity_ref_image_dir"$>amp.gif);
+}
+.editor-plaintext .editor-toolbar a.button.command-convert-entity-ref:hover {
+    background-image: url(<$mt:var name="entity_ref_image_dir"$>amp-hover.gif);
+}
+</style>
+<script type="text/javascript">
+    /* <![CDATA[ */
+        MT.App.Editor.Toolbar = new Class(MT.App.Editor.Toolbar, {
+        eventClick: function(event) {
+            var command = this.getMouseEventCommand(event);
+            if(!command) {
+                return event.stop();
+            }
+            if(command == "convertEntityRef") {
+                if(this.editor.mode == 'textarea' && this.editor.isTextSelected()) {
+                    var str = this.editor.textarea.getSelectedText();
+                    if(str.length > 0) {
+                        str = str.replace(/&/g, "&amp;");
+                        str = str.replace(/</g, "&lt;");
+                        str = str.replace(/>/g, "&gt;");
+                        str = str.replace(/"/g, "&quot;");
+                        if(this.getCvtSpace()) {
+                            str = str.replace(/ /g, "&nbsp;");
+                        }
+                        this.editor.insertHTML(str, true);
+                    }
+                }
+            }
+            else {
+                return arguments.callee.applySuper(this, arguments);
+            }
+            return event.stop();
+        },
+        getCvtSpace: function() {
+            return <$mt:var name="entity_ref_convert_space"$>;
+        }
+});
+    /* ]]> */
+</script>
+                                <a href="javascript: void 0;" title="<$mt:var name="entity_ref_button_label"$>" mt:command="convert-entity-ref" class="command-convert-entity-ref toolbar button"><b><$mt:var name="entity_ref_button_label"$></b><s></s></a>
+HTML
+  $$tmpl =~ s!($pattern)!$1$replacement!s;
   1;
 }
 
