@@ -41,7 +41,7 @@ elsif(is_mt41() || is_mt42() || is_mt43()) {
     MT->add_callback('MT::App::CMS::template_source.archetype_editor', 9, $plugin, sub { transform_mt4(@_) });
     MT->add_callback('MT::App::CMS::template_param.edit_entry', 9, $plugin, sub { mod_params_mt4(@_) });
 }
-elsif(is_mt5()) {
+elsif(is_mt5() || is_mt51()) {
     # MT5.0
     MT->add_callback('MT::App::CMS::template_source.archetype_editor', 9, $plugin, sub { transform_mt5(@_) });
     MT->add_callback('MT::App::CMS::template_param.edit_entry', 9, $plugin, sub { mod_params_mt4(@_) });
@@ -200,6 +200,10 @@ sub is_mt43 {
 
 sub is_mt5 {
     return (substr(MT->version_number, 0, 3) eq '5.0');
+}
+
+sub is_mt51 {
+    return (substr(MT->version_number, 0, 3) eq '5.1');
 }
 
 sub log {
